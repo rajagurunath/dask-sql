@@ -160,6 +160,12 @@ class CreateModelPlugin(BaseRelPlugin):
         else:
             X = training_df
             y = None
+        if "dask_scheduler_address" in kwargs:
+            ipaddress = kwargs.pop("dask_scheduler_address")
+            from dask.distributed import Client
+
+            dask_client = Client(ipaddress)
+            model.client = dask_client
 
         model.fit(X, y, **fit_kwargs)
         context.register_model(model_name, model, X.columns)

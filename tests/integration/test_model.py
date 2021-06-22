@@ -466,8 +466,9 @@ def test_mlflow_export_xgboost(c, training_df, tmpdir):
     c.sql(
         f"""
         CREATE MODEL IF NOT EXISTS my_model_xgboost WITH (
-            model_class = 'xgboost.XGBClassifier',
-            target_column = 'target'
+            model_class = 'xgboost.dask.DaskXGBClassifier',
+            target_column = 'target',
+            dask_scheduler_address = '127.0.0.1:63970'
         ) AS (
             SELECT x, y, x*y > 0 AS target
             FROM timeseries
